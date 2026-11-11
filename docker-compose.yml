@@ -1,0 +1,14 @@
+services:
+  journal-engine:
+    build: .
+    container_name: opentradejournal-ai
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=OpenTradeJournal-AI
+      - ENV=production
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - MAX_ACCOUNT_EQUITY=100000.0
+      - REVENGE_TRADING_WINDOW_SECONDS=300
+    restart: unless-stopped
