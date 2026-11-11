@@ -166,7 +166,6 @@ async def import_statement(
     file: UploadFile = File(...)
 ):
     """Uploads and parses broker statement into journal database."""
-    global trade_database
     content = await file.read()
     text = content.decode("utf-8", errors="ignore")
 
@@ -191,7 +190,6 @@ async def import_statement(
 @app.get("/api/v1/analytics/performance", response_model=PerformanceSummary)
 def get_performance():
     """Calculates full quantitative portfolio tearsheet metrics."""
-    global trade_database
     active_trades = trade_database if trade_database else load_demo_trades()
     return PerformanceEngine.calculate_summary(active_trades)
 
@@ -199,7 +197,6 @@ def get_performance():
 @app.get("/api/v1/analytics/psychology")
 def get_psychology_report():
     """Runs cognitive mistake detector and generates trader psychology audit."""
-    global trade_database
     active_trades = trade_database if trade_database else load_demo_trades()
     summary = PerformanceEngine.calculate_summary(active_trades)
     diagnoses = detector.analyze_trades(active_trades)
@@ -214,8 +211,8 @@ def get_psychology_report():
 @app.get("/api/v1/reports/tearsheet")
 def get_ascii_tearsheet():
     """Returns ASCII terminal tearsheet."""
-    global trade_database
     active_trades = trade_database if trade_database else load_demo_trades()
     summary = PerformanceEngine.calculate_summary(active_trades)
     ascii_table = TearsheetGenerator.generate_ascii_tearsheet(summary)
     return {"tearsheet": ascii_table}
+
